@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  PATRON
+  LIBRARIAN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role     @default(PATRON)
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews   Review[]
+}
+
+model Genre {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
+
+  books Book[]
+}
+
+model Book {
+  id              Int      @id @default(autoincrement())
+  title           String
+  author          String
+  isbn            String   @unique
+  description     String?
+  coverImage      String?
+  totalCopies     Int      @default(1)
+  availableCopies Int      @default(1)
+  genreId         Int
+  genre           Genre    @relation(fields: [genreId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  reviews         Review[]
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int      // 1-5
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookId    Int
+  userId    Int
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([bookId, userId])
+}
