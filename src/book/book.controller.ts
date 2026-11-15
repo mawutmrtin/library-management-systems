@@ -23,7 +23,8 @@ export class BookController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
+  update(@Param('id') id: string, @Body() updateBookDto: 
+  UpdateBookDto) {
     return this.bookService.update(+id, updateBookDto);
   }
 
