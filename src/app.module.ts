@@ -3,6 +3,8 @@ import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { BookModule } from './book/book.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { PrismaService } from './prisma/prisma.service.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -17,8 +19,9 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       serviceId: 'library-api',
     }),
     BookModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
